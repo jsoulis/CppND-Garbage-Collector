@@ -105,9 +105,20 @@ Pointer<T,size>::Pointer(T *t){
     if (first)
         atexit(shutdown);
     first = false;
-
-    // TODO: Implement Pointer constructor
     // Lab: Smart Pointer Project Lab
+
+    //save low level pointer to Pointer object
+    addr = t;
+
+    if(size > 0) isArray = true;
+    else isArray = false;
+
+    arraySize = size;
+
+    
+
+
+
 
 }
 // Copy constructor.
@@ -131,11 +142,29 @@ Pointer<T, size>::~Pointer(){
 // one object was freed.
 template <class T, int size>
 bool Pointer<T, size>::collect(){
-
     // TODO: Implement collect function
     // LAB: New and Delete Project Lab
     // Note: collect() will be called in the destructor
-    return false;
+    bool memfreed = false;
+    do {
+        for(p = refContainer.begin(); p!= refContainer.end(); p++) {
+            if(p->refcount > 0) {
+                continue;
+            }
+            memfreed = true;
+            refContainer.remove(*p);
+            if(p->memptr) {
+                if(p->isArray) {
+                    delete [] p->memptr;
+                }
+                else {
+                    delete p->memptr;
+                }
+            }
+            break;
+        }
+    } while (p != refContainer.end())
+    return memfreed;
 }
 
 // Overload assignment of pointer to Pointer.
