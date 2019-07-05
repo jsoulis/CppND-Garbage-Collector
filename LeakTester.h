@@ -28,7 +28,8 @@ namespace __Tester__ {
   int alloc_count(0), dealloc_count(0);
   long alloc_total(0), dealloc_total(0), alloc_current(0), 
     alloc_max(0);
-  bool notifications(false);
+  //bool notifications(false);
+  bool notifications(true);
   char previous_name[1000] = "";
   FILE *output(stdout);
   void redirect_output(const char name[]) {
@@ -46,6 +47,7 @@ namespace __Tester__ {
     void *address(std::malloc(_size));
     if(!address) throw std::bad_alloc();
     if(line != -1) {
+      std::cout<<line<<std::endl;
       alloc_count++;
       alloc_total += _size; alloc_current += _size;
       if(alloc_current > alloc_max) alloc_max = alloc_current;
