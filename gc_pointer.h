@@ -168,6 +168,7 @@ bool Pointer<T, size>::collect(){
     bool memfreed = false;
     typename std::list<PtrDetails<T>>::iterator p;
     do {
+        showlist();
         for(p = refContainer.begin(); p!= refContainer.end(); p++) {
             if(p->refcount > 0) {
                 continue;
@@ -175,10 +176,10 @@ bool Pointer<T, size>::collect(){
             memfreed = true;
             if(p->memPtr) {
                 if(p->isArray) {
-                    delete[] p->memPtr;
+                    delete[] ((void*)p->memPtr);
                 }
                 else {
-                    delete p->memPtr;
+                    delete ((void*)p->memPtr);
                 }
             }
             refContainer.remove(*p);
@@ -219,6 +220,17 @@ T *Pointer<T, size>::operator=(T *t){
     arraySize = size;
 
     return *this;
+
+ /*
+    
+     * try just doing:
+     * 
+     * Pointer<T,size> tmp(t);
+     * std::swap(*this, tmp);
+     * return *this;
+     * 
+     
+ */
 
 }
 // Overload assignment of Pointer to Pointer.
